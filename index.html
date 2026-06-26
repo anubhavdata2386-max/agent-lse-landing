@@ -270,12 +270,25 @@
     var launchBtn = document.getElementById('agent-lse-launch');
     if (!launchBtn) return;
 
-    // Reveal the widget in its normal docked state — programmatically clicking
-    // the internal expand button broke its layout, so let the user open the
-    // dialog the same way the widget already supports (tapping its own bar).
+    var expanded = false;
+    var messenger = document.querySelector('chat-messenger');
+    if (messenger) {
+      messenger.addEventListener('chat-messenger-close', function () { expanded = false; });
+    }
+
     launchBtn.addEventListener('click', function () {
       var cm = document.querySelector('chat-messenger');
       if (cm) cm.classList.add('lse-open');
+      if (expanded) return;
+      expanded = true;
+      // Wait for the now-visible bar to finish laying out before expanding it,
+      // otherwise the toggle fires against a not-yet-sized widget and breaks.
+      requestAnimationFrame(function () {
+        requestAnimationFrame(function () {
+          var toggle = document.getElementById('agent-lse-toggle');
+          if (toggle) toggle.click();
+        });
+      });
     });
   })();
 </script>
