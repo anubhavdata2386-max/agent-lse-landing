@@ -270,22 +270,12 @@
     var launchBtn = document.getElementById('agent-lse-launch');
     if (!launchBtn) return;
 
-    var expanded = false;
-
-    // Reset state if the user closes the chat, so the card can reopen it.
-    var messenger = document.querySelector('chat-messenger');
-    if (messenger) {
-      messenger.addEventListener('chat-messenger-close', function () { expanded = false; });
-    }
-
+    // Reveal the widget in its normal docked state — programmatically clicking
+    // the internal expand button broke its layout, so let the user open the
+    // dialog the same way the widget already supports (tapping its own bar).
     launchBtn.addEventListener('click', function () {
       var cm = document.querySelector('chat-messenger');
-      if (cm) cm.classList.add('lse-open');      // reveal the (themed) widget
-      if (expanded) return;                       // already open — just keep it visible
-      expanded = true;
-      var toggle = document.getElementById('agent-lse-toggle');
-      // Give the revealed widget a frame to lay out, then expand it from the bar.
-      if (toggle) setTimeout(function () { toggle.click(); }, 60);
+      if (cm) cm.classList.add('lse-open');
     });
   })();
 </script>
