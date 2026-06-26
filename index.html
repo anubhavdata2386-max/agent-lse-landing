@@ -116,6 +116,32 @@
   .disclaimer{font-size:12.5px; color:var(--muted); margin:0;}
   .credit{font-size:11.5px; color:var(--muted); opacity:.75; margin:8px 0 0;}
 
+  /* The widget renders in a shadow DOM, but these documented CSS custom properties
+     ("CSS tokens") are inherited through the shadow boundary, so setting them on the
+     host <chat-messenger> element is the official way to theme it. */
+  chat-messenger{
+    position:fixed; z-index:999;
+    /* hidden until the user clicks the hero card */
+    opacity:0; pointer-events:none; transition:opacity .25s ease;
+
+    --chat-messenger-color--surface:#14130f;
+    --chat-messenger-color--surface-container:#1c1a14;
+    --chat-messenger-color--surface-container-high:#242019;
+    --chat-messenger-color--primary:#D4AF37;
+    --chat-messenger-color--on-primary:#1a1407;
+    --chat-messenger-color--primary-container:#241f14;
+    --chat-messenger-color--on-primary-container:#f3efe4;
+    --chat-messenger-color--secondary:#2a2720;
+    --chat-messenger-color--on-secondary:#f3efe4;
+    --chat-messenger-color--on-surface:#f3efe4;
+    --chat-messenger-color--on-surface-variant:#b6ae9c;
+    --chat-messenger-color--outline:#3a362c;
+    --chat-messenger-color--outline-active:#D4AF37;
+    --chat-messenger-color--link:#e6c659;
+    --chat-messenger-font-family:'Hanken Grotesk',system-ui,sans-serif;
+  }
+  chat-messenger.lse-open{ opacity:1; pointer-events:auto; }
+
   @media (max-width:600px){
     .site-header{padding:14px 20px;}
     .logo{gap:9px;}
@@ -218,8 +244,6 @@
     chat-title-icon="https://gstatic.com/dialogflow-console/common/assets/ccai-favicons/conversational_agents.png"
     enable-file-upload
     enable-audio-input
-    theme-id="dark"
-    custom-css="--brand-color: #D4AF37; --background-color: #14130f; --text-color: #f3efe4;"
   >
     <chat-reset-session-button
       slot="titlebar-actions"
@@ -242,13 +266,23 @@
   (function () {
     var launchBtn = document.getElementById('agent-lse-launch');
     if (!launchBtn) return;
+
+    var expanded = false;
+
+    // Reset state if the user closes the chat, so the card can reopen it.
+    var messenger = document.querySelector('chat-messenger');
+    if (messenger) {
+      messenger.addEventListener('chat-messenger-close', function () { expanded = false; });
+    }
+
     launchBtn.addEventListener('click', function () {
-      if (window.chatSdk && typeof chatSdk.open === 'function') {
-        chatSdk.open();
-        return;
-      }
+      var cm = document.querySelector('chat-messenger');
+      if (cm) cm.classList.add('lse-open');      // reveal the (themed) widget
+      if (expanded) return;                       // already open — just keep it visible
+      expanded = true;
       var toggle = document.getElementById('agent-lse-toggle');
-      if (toggle) toggle.click();
+      // Give the revealed widget a frame to lay out, then expand it from the bar.
+      if (toggle) setTimeout(function () { toggle.click(); }, 60);
     });
   })();
 </script>
