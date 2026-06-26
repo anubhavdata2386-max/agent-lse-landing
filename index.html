@@ -120,7 +120,10 @@
      ("CSS tokens") are inherited through the shadow boundary, so setting them on the
      host <chat-messenger> element is the official way to theme it. */
   chat-messenger{
-    position:fixed; z-index:999;
+    /* Don't set position here — the widget docks itself by default (this is what
+       produced the full-width bottom bar). Overriding position without matching
+       top/left/right/bottom values strips that and collapses its layout. */
+    z-index:999;
     /* hidden until the user clicks the hero card */
     opacity:0; pointer-events:none; transition:opacity .25s ease;
 
