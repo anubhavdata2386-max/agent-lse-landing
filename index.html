@@ -120,6 +120,14 @@
   .disclaimer{font-size:12.5px; color:var(--muted); margin:0;}
   .credit{font-size:11.5px; color:var(--muted); opacity:.75; margin:8px 0 0;}
 
+  /* The widget renders inside a Shadow DOM with no public theming hooks, so host-level
+     color tokens don't reach it. Inverting at paint time does, since filter applies to
+     the rendered pixels regardless of shadow boundaries. hue-rotate(180deg) un-shifts
+     the hues that invert() flips, so colors land close to their original tone. */
+  chat-messenger{
+    filter:invert(1) hue-rotate(180deg);
+  }
+
   @media (max-width:600px){
     .site-header{padding:14px 20px;}
     .logo{gap:9px;}
