@@ -13,10 +13,8 @@
 <link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,400..600;1,6..72,400..600&family=Hanken+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
 
 <script defer
-  src="https://www.gstatic.com/chat-messenger/sdk/prod/v1.16/chat-messenger.js">
+  src="https://www.gstatic.com/ces-console/fast/ces-messenger/ces-messenger.js">
 </script>
-<link rel="stylesheet" href="https://www.gstatic.com/chat-messenger/sdk/prod/v1.16/themes/chat-messenger-default.css">
-<link rel="stylesheet" href="https://www.gstatic.com/chat-messenger/sdk/prod/v1.16/themes/chat-messenger-layout.css">
 
 <style>
   :root{
@@ -116,34 +114,30 @@
   .disclaimer{font-size:12.5px; color:var(--muted); margin:0;}
   .credit{font-size:11.5px; color:var(--muted); opacity:.75; margin:8px 0 0;}
 
-  /* The widget renders in a shadow DOM, but these documented CSS custom properties
-     ("CSS tokens") are inherited through the shadow boundary, so setting them on the
-     host <chat-messenger> element is the official way to theme it. */
-  chat-messenger{
-    /* Don't set position here — the widget docks itself by default (this is what
-       produced the full-width bottom bar). Overriding position without matching
-       top/left/right/bottom values strips that and collapses its layout. */
+  /* ces-messenger renders in a shadow DOM; these documented CSS custom properties
+     inherit through the shadow boundary, so setting them on the host element themes it. */
+  ces-messenger{
     z-index:999;
     /* hidden until the user clicks the hero card */
     opacity:0; pointer-events:none; transition:opacity .25s ease;
 
-    --chat-messenger-color--surface:#14130f;
-    --chat-messenger-color--surface-container:#1c1a14;
-    --chat-messenger-color--surface-container-high:#242019;
-    --chat-messenger-color--primary:#D4AF37;
-    --chat-messenger-color--on-primary:#1a1407;
-    --chat-messenger-color--primary-container:#241f14;
-    --chat-messenger-color--on-primary-container:#f3efe4;
-    --chat-messenger-color--secondary:#2a2720;
-    --chat-messenger-color--on-secondary:#f3efe4;
-    --chat-messenger-color--on-surface:#f3efe4;
-    --chat-messenger-color--on-surface-variant:#b6ae9c;
-    --chat-messenger-color--outline:#3a362c;
-    --chat-messenger-color--outline-active:#D4AF37;
-    --chat-messenger-color--link:#e6c659;
-    --chat-messenger-font-family:'Hanken Grotesk',system-ui,sans-serif;
+    --ces-messenger-color--surface:#14130f;
+    --ces-messenger-color--surface-container:#1c1a14;
+    --ces-messenger-color--surface-container-high:#242019;
+    --ces-messenger-color--primary:#D4AF37;
+    --ces-messenger-color--on-primary:#1a1407;
+    --ces-messenger-color--primary-container:#241f14;
+    --ces-messenger-color--on-primary-container:#f3efe4;
+    --ces-messenger-color--secondary:#2a2720;
+    --ces-messenger-color--on-secondary:#f3efe4;
+    --ces-messenger-color--on-surface:#f3efe4;
+    --ces-messenger-color--on-surface-variant:#b6ae9c;
+    --ces-messenger-color--outline:#3a362c;
+    --ces-messenger-color--outline-active:#D4AF37;
+    --ces-messenger-color--link:#e6c659;
+    --ces-messenger-font-family:'Hanken Grotesk',system-ui,sans-serif;
   }
-  chat-messenger.lse-open{ opacity:1; pointer-events:auto; }
+  ces-messenger.lse-open{ opacity:1; pointer-events:auto; }
 
   @media (max-width:600px){
     .site-header{padding:14px 20px;}
@@ -225,70 +219,23 @@
 })();
 </script>
 
-<script>
-  window.addEventListener("chat-messenger-loaded", () => {
-    chatSdk.registerContext(
-      chatSdk.prebuilts.ces.createContext({
-        deploymentName: "projects/59072056498/locations/us/apps/40e86b20-552e-46b7-bee1-0c4d6fee5400/deployments/0de03917-a2f9-48d5-9082-a2ceeb991b71",
-        tokenBroker: {
-          enableTokenBroker: true,
-          enableRecaptcha: false
-        }
-      }),
-    );
-  });
-</script>
-<!-- Update the url-allowlist attribute with a comma-separated list of origins allowed to render images -->
-<chat-messenger
-  url-allowlist="*"
->
-  <chat-messenger-container
-    chat-title="EMPA_Anubhav_AI Bot"
-    chat-title-icon="https://gstatic.com/dialogflow-console/common/assets/ccai-favicons/conversational_agents.png"
-    enable-file-upload
-    enable-audio-input
-  >
-    <chat-reset-session-button
-      slot="titlebar-actions"
-      title-text="Start new chat"
-    ></chat-reset-session-button>
-    <chat-toggle-dialog-button
-      id="agent-lse-toggle"
-      slot="titlebar-actions"
-      title-text-expanded="Collapse"
-      title-text-collapsed="Expand"
-    ></chat-toggle-dialog-button>
-    <chat-messenger-close-button
-      slot="titlebar-actions"
-      title-text="Close"
-    ></chat-messenger-close-button>
-  </chat-messenger-container>
-</chat-messenger>
+<ces-messenger
+  deployment-id="projects/59072056498/locations/us/apps/40e86b20-552e-46b7-bee1-0c4d6fee5400/deployments/0de03917-a2f9-48d5-9082-a2ceeb991b71"
+  token-broker-url="https://ces-token-broker-6x63hxbz4q-uc.a.run.app"
+  chat-title="Agent LSE"
+  auto-open-chat="false"
+></ces-messenger>
 
 <script>
   (function () {
     var launchBtn = document.getElementById('agent-lse-launch');
     if (!launchBtn) return;
 
-    var expanded = false;
-    var messenger = document.querySelector('chat-messenger');
-    if (messenger) {
-      messenger.addEventListener('chat-messenger-close', function () { expanded = false; });
-    }
-
     launchBtn.addEventListener('click', function () {
-      var cm = document.querySelector('chat-messenger');
-      if (cm) cm.classList.add('lse-open');
-      if (expanded) return;
-      expanded = true;
-      // Wait for the now-visible bar to finish laying out before expanding it,
-      // otherwise the toggle fires against a not-yet-sized widget and breaks.
-      requestAnimationFrame(function () {
-        requestAnimationFrame(function () {
-          var toggle = document.getElementById('agent-lse-toggle');
-          if (toggle) toggle.click();
-        });
-      });
+      var cm = document.querySelector('ces-messenger');
+      if (!cm) return;
+      cm.classList.add('lse-open');
+      cm.setAttribute('auto-open-chat', 'true');
     });
   })();
 </script>
