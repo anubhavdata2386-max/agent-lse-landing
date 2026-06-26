@@ -223,7 +223,6 @@
   deployment-id="projects/59072056498/locations/us/apps/40e86b20-552e-46b7-bee1-0c4d6fee5400/deployments/0de03917-a2f9-48d5-9082-a2ceeb991b71"
   token-broker-url="https://ces-token-broker-6x63hxbz4q-uc.a.run.app"
   chat-title="Agent LSE"
-  auto-open-chat="false"
 ></ces-messenger>
 
 <script>
@@ -235,7 +234,7 @@
       var cm = document.querySelector('ces-messenger');
       if (!cm) return;
       cm.classList.add('lse-open');
-      cm.setAttribute('auto-open-chat', 'true');
+      if (typeof cm.open === 'function') cm.open();
     });
   })();
 </script>
