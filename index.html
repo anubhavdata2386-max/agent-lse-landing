@@ -114,28 +114,13 @@
   .disclaimer{font-size:12.5px; color:var(--muted); margin:0;}
   .credit{font-size:11.5px; color:var(--muted); opacity:.75; margin:8px 0 0;}
 
-  /* ces-messenger renders in a shadow DOM; these documented CSS custom properties
-     inherit through the shadow boundary, so setting them on the host element themes it. */
+  /* ces-messenger does not theme via host-element CSS custom properties — it injects
+     its theme-id palette plus the custom-css attribute string directly into its
+     shadow DOM, so the dark/gold styling lives on the element's attributes instead. */
   ces-messenger{
     z-index:999;
     /* hidden until the user clicks the hero card */
     opacity:0; pointer-events:none; transition:opacity .25s ease;
-
-    --ces-messenger-color--surface:#14130f;
-    --ces-messenger-color--surface-container:#1c1a14;
-    --ces-messenger-color--surface-container-high:#242019;
-    --ces-messenger-color--primary:#D4AF37;
-    --ces-messenger-color--on-primary:#1a1407;
-    --ces-messenger-color--primary-container:#241f14;
-    --ces-messenger-color--on-primary-container:#f3efe4;
-    --ces-messenger-color--secondary:#2a2720;
-    --ces-messenger-color--on-secondary:#f3efe4;
-    --ces-messenger-color--on-surface:#f3efe4;
-    --ces-messenger-color--on-surface-variant:#b6ae9c;
-    --ces-messenger-color--outline:#3a362c;
-    --ces-messenger-color--outline-active:#D4AF37;
-    --ces-messenger-color--link:#e6c659;
-    --ces-messenger-font-family:'Hanken Grotesk',system-ui,sans-serif;
   }
   ces-messenger.lse-open{ opacity:1; pointer-events:auto; }
 
@@ -223,6 +208,14 @@
   deployment-id="projects/59072056498/locations/us/apps/40e86b20-552e-46b7-bee1-0c4d6fee5400/deployments/0de03917-a2f9-48d5-9082-a2ceeb991b71"
   token-broker-url="https://ces-token-broker-6x63hxbz4q-uc.a.run.app"
   chat-title="Agent LSE"
+  theme-id="dark"
+  custom-css="
+    :host { --brand-color: #D4AF37; --text-color: #f3efe4; }
+    main { background: #14130f !important; }
+    header { background: #1c1a14 !important; color: #f3efe4 !important; }
+    header h1 { color: #D4AF37 !important; }
+    button:not(.send) { background: #D4AF37 !important; color: #1a1407 !important; }
+  "
 ></ces-messenger>
 
 <script>
